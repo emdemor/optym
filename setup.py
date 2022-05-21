@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
     readme = fh.read()
 
 setup(
-    name="gradesc",
+    name="optym",
     version=__version__,
     # url="",
     license="MIT License",
