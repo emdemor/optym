@@ -107,22 +107,27 @@ class GradientDescent:
         return old_cost, np.array(grad)
 
 
-
 class MCMC:
-    def __init__(self, min_parameters, max_parameters, metropolis_hastings = False, clip_limits = False):
+    def __init__(
+        self,
+        min_parameters,
+        max_parameters,
+        method="metropolis_hastings",
+        clip_limits=False,
+    ):
 
         self.learning_rate = None
 
         self.iterations = None
-        
+
         self.min_parameters = min_parameters
 
         self.max_parameters = max_parameters
 
-        self.metropolis_hastings = metropolis_hastings
+        self.method = method
 
         self.clip_limits = clip_limits
-        
+
         self.amp_parameters = None
 
         self.stp_parameters = None
@@ -132,14 +137,14 @@ class MCMC:
         self.param_in_max = None
 
     def __repr__(self):
-        return f"""MCMCMinimizer()"""
+        return f"""MCMC(method = {self.method})"""
 
     def __call__(self, cost, start_parameters, learning_rate=0.01, iterations=100):
 
         self.learning_rate = learning_rate
 
         self.iterations = iterations
-        
+
         self.amp_parameters = np.array(self.max_parameters) - np.array(
             self.min_parameters
         )
@@ -160,18 +165,23 @@ class MCMC:
 
             y_new = cost(X_new)
 
-            if self.metropolis_hastings:
-                
+            if self.method == "metropolis_hastings":
+
                 A = min(1, y_new / y0)
-                
+
                 u = np.random.random()
-                
+
                 if u <= A:
                     X0 = X_new
                     y0 = y_new
-                    
-            else:
+
+            elif self.method == "maximize":
                 if y_new > y0:
+                    X0 = X_new
+                    y0 = y_new
+
+            elif self.method == "minimize":
+                if y_new < y0:
                     X0 = X_new
                     y0 = y_new
 
@@ -184,7 +194,7 @@ class MCMC:
         return np.array(parameters_hist), np.array(cost_hist)
 
     def __propose_parameter(self, X, stp_X):
-        
+
         X = np.array(X)
 
         delta = stp_X * np.random.randn(*X.shape)
@@ -193,7 +203,11 @@ class MCMC:
             pos_par = X + delta
             neg_par = X - delta
 
-            new_par = np.where( (pos_par >= self.min_parameters) & (pos_par <= self.max_parameters), pos_par, neg_par)
+            new_par = np.where(
+                (pos_par >= self.min_parameters) & (pos_par <= self.max_parameters),
+                pos_par,
+                neg_par,
+            )
 
         else:
             new_par = X + delta
@@ -219,6 +233,6 @@ class MCMC:
             self.max = max_cost_hist
             self.param_in_max = max_par_hist
         else:
-            if min_cost_hist > self.max:
+            if self.min_cost_hist > self.max:
                 self.max = max_cost_hist
                 self.param_in_max = max_par_hist

@@ -1,5 +1,5 @@
 from setuptools import setup
-from gradesc import __version__
+from optym import __version__
 
 with open("README.md", "r") as fh:
     readme = fh.read()
@@ -14,7 +14,7 @@ setup(
     long_description_content_type="text/markdown",
     author_email="emdemor415@gmail.com",
     keywords="",
-    description=u"Simple Gradient Descent implementation",
-    packages=["gradesc"],
+    description=u"Some optimization functions",
+    packages=["optym"],
     install_requires=["numpy", "pandas", "setuptools"],
 )
