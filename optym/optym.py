@@ -3,22 +3,6 @@ import pandas as pd
 import numpy as np
 
 
-def function(a: int):
-    """ewasfasfsdf
-
-    Parameters
-    ----------
-    a : int
-        sadfasdf
-
-    Returns
-    -------
-    int
-        asfsdf
-    """
-    return a
-
-
 class GradientDescent:
     """Simple implementation of Gradient-Descent algorithm.
 
