@@ -1,24 +1,48 @@
+from typing import Callable
 import pandas as pd
 import numpy as np
 
 
-class GradientDescent:
+def function(a: int):
+    """ewasfasfsdf
+
+    Parameters
+    ----------
+    a : int
+        sadfasdf
+
+    Returns
+    -------
+    int
+        asfsdf
     """
-    Simple implementation of Gradient-Descent algorithm.
+    return a
+
+
+class GradientDescent:
+    """Simple implementation of Gradient-Descent algorithm.
+
     Example
     -------
-    import numpy as np
-    from optym import GradientDescent
-    def cost(parameters):
-        target_parameters = np.array([1,1])
-        return np.sum(np.square(target_parameters-parameters))
-    gd = GradientDescent(learning_rate = 0.05, iterations = 100, delta_x=0.001)
-    start_parameters = np.random.random(2)
-    par_hist, cost_hist = gd(cost, start_parameters)
-    print(gd.param_in_min)
+    >>> import numpy as np
+    >>> from optym import GradientDescent
+    >>> def cost(parameters):
+          target_parameters = np.array([1,1])
+          return np.sum(np.square(target_parameters-parameters))
+    >>> gd = GradientDescent(learning_rate = 0.05, iterations = 100, delta_x=0.001)
+    >>> start_parameters = np.random.random(2)
+    >>> par_hist, cost_hist = gd(cost, start_parameters)
+    >>> print(gd.param_in_min)
+
+    Parameters
+    ----------
+    delta_x : float, optional
+        A numerical parameter representing dx on the numerical derivative dy/dx, by default 0.001
+
     """
 
-    def __init__(self, delta_x=0.001, **kwargs):
+    def __init__(self, delta_x: float = 0.001, **kwargs):
+        """_summary_"""
 
         self.learning_rate = None
 
@@ -108,12 +132,45 @@ class GradientDescent:
 
 
 class MCMC:
+    """Simple implementation Markov-Chain Monte Carlo algorithms.
+
+    Example
+    -------
+    >>> import numpy as np
+    >>> import matplotlib.pyplot as plt
+    >>> from optym import GradientDescent, MCMC
+    >>> def cost(parameters):
+          target_parameters = np.array([1,1])
+          return np.sum(np.square(target_parameters-parameters))
+    >>> def prob(parameters):
+          return np.exp(-0.5 * cost(parameters))
+    >>> start_parameters = np.random.random(2)
+    >>> min_parameters = [0,0]
+    >>> max_parameters = [2,2]
+    >>> mcmc = MCMC(min_parameters, max_parameters, method="metropolis_hastings")
+    >>> par_hist, cost_hist = mcmc(prob, start_parameters, iterations=20000)
+    >>> print(mcmc.param_in_max)
+    >>> plt.plot(np.log10(cost_hist))
+    >>> plt.show()
+
+    Parameters
+    ----------
+    min_parameters : list
+        List of n elements containing the minimum value for each one of the n parameters.
+    max_parameters : list
+        List of n elements containing the maximum value for each one of the n parameters.
+    method : str, optional
+        Optimization method. {'metropolis_hastings', 'maximize', 'minimize'}, by default "metropolis_hastings"
+    clip_limits : bool, optional
+        If the new proposals must be clipped on the parameter intervals, by default False
+    """
+
     def __init__(
         self,
-        min_parameters,
-        max_parameters,
-        method="metropolis_hastings",
-        clip_limits=False,
+        min_parameters: list,
+        max_parameters: list,
+        method: str = "metropolis_hastings",
+        clip_limits: bool = False,
     ):
 
         self.learning_rate = None
@@ -139,7 +196,26 @@ class MCMC:
     def __repr__(self):
         return f"""MCMC(method = {self.method})"""
 
-    def __call__(self, cost, start_parameters, learning_rate=0.01, iterations=100):
+    def __call__(
+        self,
+        cost: Callable,
+        start_parameters: list,
+        learning_rate: float = 0.01,
+        iterations: int = 100,
+    ):
+        """Running the Monte Carlo Method
+
+        :param cost: A function with the function to be optimized
+        :type cost: Callable
+        :param start_parameters: List with the n initial parameters
+        :type start_parameters: list
+        :param learning_rate: Learning rate, defaults to 0.01
+        :type learning_rate: float, optional
+        :param iterations: Number of iterations, defaults to 100
+        :type iterations: int, optional
+        :return: A tuple with two elements. The first is a numpy array with the historical list of parameters and the second is the historical list of objection function values.
+        :rtype: _type_
+        """
 
         self.learning_rate = learning_rate
 
